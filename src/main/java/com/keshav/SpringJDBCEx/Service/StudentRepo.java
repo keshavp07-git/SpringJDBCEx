@@ -3,9 +3,12 @@ package com.keshav.SpringJDBCEx.Service;
 import com.keshav.SpringJDBCEx.models.Students;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.lang.reflect.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +38,13 @@ public class StudentRepo {
     }
 
     public List<Students> findAll() {
-        List<Students> students = new ArrayList<>();
-        return students;
+        String sql = "select * from Students";
+        return jdbc.query(sql,(rs,rowNum) -> {
+            Students student = new Students();
+            student.setRollNo(rs.getInt("rollno"));
+            student.setName(rs.getString("name"));
+            student.setMarks(rs.getInt("marks"));
+            return student;
+        });
     }
 }
